@@ -1,3 +1,30 @@
+# Programming Jokes Generator
+A little lambda function that spits out jokes about computer programming!
+
+# Usage
+
+### Build
+```
+./gradlew clean build
+```
+
+### Host Locally
+```
+serverless offlines start
+```
+
+Then hit this endpoint with a GET request:
+```
+http://localhost:3000/jokes
+```
+
+## Deploy Live
+```
+serverless deploy
+```
+
+---
+
 # AWS Clojurescript Gradle Template
 
 This project compiles **Clojurescript** to a [NodeJS](https://nodejs.org/en/) module using the [Gradle Clojure Plugin](https://gradle-clojure.github.io/gradle-clojure/index.html).

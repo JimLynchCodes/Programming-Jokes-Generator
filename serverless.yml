@@ -57,11 +57,11 @@ package:
     - build/clojurescript/main/functions.js
 
 functions:
-  hello:
-    handler: build/clojurescript/main/functions.hello
+  healthCheck:
+    handler: build/clojurescript/main/functions.healthCheck
     events:
       - http:
-          path: hello
+          path: healthCheck
           method: get
 
   now:
@@ -70,6 +70,15 @@ functions:
       - http:
           path: now
           method: get
+  jokes:
+    handler: build/clojurescript/main/functions.jokes
+    events:
+      - http:
+          path: jokes
+          method: get
+
+plugins:
+  - serverless-offline
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
