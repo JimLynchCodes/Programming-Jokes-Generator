@@ -27,8 +27,7 @@
 ;  available on the "event" and "ctx" here (and ability to 
 ;  ctrl +  to the implementation would be awesome!!)
 (defn jokes [event ctx cb]
-  (go (let [response (<! (http/get "https://sv443.net/jokeapi/category/Programming"
-                                   {:with-credentials? false}))
+  (go (let [response (<! (http/get "https://sv443.net/jokeapi/category/Programming"))
 
             ;  TODO - Add type annotations to describe this object:
             ; {
