@@ -18,6 +18,12 @@ Then hit this endpoint with a GET request:
 http://localhost:3000/jokes
 ```
 
+_Note: You may also need to run these commands to get serverless offline up and running:_
+```
+npm i -g serverless
+sls plugin install -n serverless-offline
+```
+
 ## Deploy Live
 ```
 serverless deploy
