@@ -40,8 +40,10 @@
                        (:body)
                        (clj->js)
                        (.stringify js/JSON))]
-        (prn (.stringify js/JSON event))
-        (prn (.stringify js/JSON ctx))
+
+        (js/console.log event)
+        (js/console.log ctx)
+
         (cb nil (clj->js
                  {:statusCode 200
                   :headers    {"Content-Type" "application/json"}
