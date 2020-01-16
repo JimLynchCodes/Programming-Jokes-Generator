@@ -1,12 +1,15 @@
 (ns serverless.functions
   (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [cljs.nodejs :as nodejs]
+  (:require [schema.core :as s]
+            [cljs.nodejs :as nodejs]
             [cljs-http.client :as http]
             [cljs.core.async :refer [put! chan <!]]))
 
 (nodejs/enable-util-print!)
 (defonce moment (nodejs/require "moment"))
 (set! js/XMLHttpRequest (nodejs/require "xhr2"))
+
+(s/set-fn-validation! true)
 
 (defn healthCheck [event ctx cb]
   (println ctx)
@@ -23,19 +26,19 @@
             :headers    {"Content-Type" "text/html"}
             :body       (str "<h1>" (.format (moment.) "LLLL") "</h1>")})))
 
-;  TODO - Add type annotations to describe what properties are 
-;  available on the "event" and "ctx" here (and ability to 
-;  ctrl +  to the implementation would be awesome!!)
-(defn jokes [event ctx cb]
+(s/defschema ANY s/Any)
+(s/defschema bad-map {:foobar s/String})
+(s/defschema Joke {:category s/String
+                   :type     s/String
+                   :joke     s/String
+                   :id       s/Int})
+
+(s/defn ^:always-validate jokes [event :- ANY
+                                 ctx   :- ANY
+                                 cb    :- ANY] :- nil
   (go (let [response (<! (http/get "https://sv443.net/jokeapi/category/Programming"))
 
-            ;  TODO - Add type annotations to describe this object:
-            ; {
-            ;   "category": "Programming",
-            ;   "type": "single",
-            ;   "joke": "___",
-            ;   "id": 0
-            ;  }
+            ; Would like to specify this as joke :- Joke
             joke  (->> response
                        (:body)
                        (clj->js)
