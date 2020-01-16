@@ -27,12 +27,12 @@
             :body       (str "<h1>" (.format (moment.) "LLLL") "</h1>")})))
 
 ; Purposely incorrect schema
-(def Joke {:category s/String
-           :type     s/String
-           :joke     s/String
-           :id       s/Int
-           :foobarrr s/Int
-           :hmmmmm   s/String})
+(s/defschema Joke {:category s/String
+                   :type     s/String
+                   :joke     s/String
+                   :id       s/Int
+                   :foobarrr s/Int
+                   :hmmmmm   s/String})
 
 ; Doesn't fail when it should
 (s/defn unpack-joke [response] :- Joke
