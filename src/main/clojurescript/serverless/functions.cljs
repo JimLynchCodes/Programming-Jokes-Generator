@@ -3,7 +3,10 @@
   (:require [schema.core :as s]
             [cljs.nodejs :as nodejs]
             [cljs-http.client :as http]
-            [cljs.core.async :refer [put! chan <!]]))
+            [cljs.core.async :refer [put! chan <!]]
+            [spec-tools.data-spec :as data]
+            [orchestra.spec.test :as st]
+            [orchestra.core :refer [defn-spec]]))
 
 (nodejs/enable-util-print!)
 (defonce moment (nodejs/require "moment"))
@@ -51,6 +54,20 @@
                  {:statusCode 200
                   :headers    {"Content-Type" "application/json"}
                   :body       joke})))))
+
+(s/def ::Nil
+  (data/spec ::Nil
+             nil))
+
+(defn-spec handler ::Nil [event map? ctx map? cb any?]
+  'nil)
+
+(defn-spec jokes3 ::JokeResponse [response map?]
+  {:statusCode 200
+   :headers    {"Content-Type" "application/json"}
+   :body       (->> response :body)})
+
+(st/instrument)
 
 (set! (.-exports js/module) #js
                              {:healthCheck healthCheck
