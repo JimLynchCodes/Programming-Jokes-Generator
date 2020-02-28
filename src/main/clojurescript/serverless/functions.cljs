@@ -4,7 +4,7 @@
             [clojure.spec.alpha :as spec]
             [cljs.nodejs :as nodejs]
             [cljs-http.client :as http]
-            [cljs.core.async :refer [put! chan <!]]
+            [cljs.core.async :refer [<!]]
             [spec-tools.data-spec :as data]))
 
 (nodejs/enable-util-print!)
@@ -12,58 +12,57 @@
 (defonce moment (nodejs/require "moment"))
 (set! js/XMLHttpRequest (nodejs/require "xhr2"))
 
-(defn healthCheck [event ctx cb]
+(def JOKES_ENDPOINT "https://sv443.net/jokeapi/category/Programming")
+
+(defn healthCheck [_event ctx cb]
   (println ctx)
   (cb nil (clj->js
            {:statusCode 200
             :headers    {"Content-Type" "text/html"}
-            :body       "{\n\t\"message\": \"We're gud!\"\n}"})))
+            :body       "{\n\t\"message\": \"We're good!\"\n}"})))
 
-
-(defn now [event ctx cb]
+(defn now [_event ctx cb]
   (println ctx)
   (cb nil (clj->js
            {:statusCode 200
             :headers    {"Content-Type" "text/html"}
             :body       (str "<h1>" (.format (moment.) "LLLL") "</h1>")})))
-(s/defschema ANY s/Any)
-(s/defschema Joke {:category s/String
+
+(s/defschema Joke {:id       s/Int
+                   :category s/String
                    :type     s/String
-                   :joke     s/String
-                   :id       s/Int})
+                   :joke     s/String})
+
+(s/defschema TwoPartJoke {:id       s/Int
+                          :category s/String
+                          :type     "single"
+                          :joke     s/String
+                          :setup     string?
+                          :delivery     string?})
 
 (spec/def ::Joke (data/spec ::Joke
-                         {:category string?
-                            :type     string?
-                            :joke     string?
-                            :id       int?}))
+                            {:id       int?
+                             :category string?
+                             :type     "twopart"
+                             :joke     string?}))
 
-; (def random-jokes (->> (spec/exercise ::Joke)
-;                        (map first)))
-
-(defn conforms? [spec x]
-  (if (spec/valid? spec x)
-    x
-    (throw (ex-info (str "invalid value for spec " spec \newline (spec/explain-str spec x))
-                    {:in x :spec spec}))))
+(spec/def ::TwoPartJoke (data/spec ::Joke
+                                   {:id       int?
+                                    :category string?
+                                    :type     "twopart"
+                                    :setup     string?
+                                    :delivery     string?}))
 
 (spec/fdef jokes
   :args (spec/cat :event map? :ctx map? :cb any?)
   :ret nil)
 
-(defn jokes [event ctx cb]
-  (go (let [response (<! (http/get "https://sv443.net/jokeapi/category/Programming"))
-
-            ; Would like to specify this as joke :- Joke
+(defn jokes [_event _ctx cb]
+  (go (let [response (<! (http/get JOKES_ENDPOINT))
             joke  (->> response
                        (:body)
-                       (conforms? ::Joke)
                        (clj->js)
                        (.stringify js/JSON))]
-
-        (js/console.log event)
-        (js/console.log ctx)
-
         (cb nil (clj->js
                  {:statusCode 200
                   :headers    {"Content-Type" "application/json"}

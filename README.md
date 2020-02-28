@@ -10,12 +10,20 @@ A little lambda function that spits out jokes about computer programming!
 
 ### Host Locally
 ```
-serverless offlines start
+serverless offline start
 ```
 
 Then hit this endpoint with a GET request:
 ```
 http://localhost:3000/jokes
+```
+
+This should return a single random joke.
+
+These routes also exist for testing purposes:
+```
+http://localhost:3000/healthCheck
+http://localhost:3000/now
 ```
 
 _Note: You may also need to run these commands to get serverless offline up and running:_
@@ -29,7 +37,24 @@ sls plugin install -n serverless-offline
 serverless deploy
 ```
 
+_Note: you will need to have the aws cli configured in order to deploy._
+
+
+# Live Endpoints
+This project is hosted live! It's a public HTTPS api so no api keys are required, but each client is rate limited to only 50 requests per day.
+
+### endpoints:
+  - GET - https://r2iol78q44.execute-api.us-east-1.amazonaws.com/dev/healthCheck
+  - GET - https://r2iol78q44.execute-api.us-east-1.amazonaws.com/dev/now
+  - GET - https://r2iol78q44.execute-api.us-east-1.amazonaws.com/dev/jokes
+
+
+# Motivation
+I love coding in Clojure, and having a simple go-to recipe for building highly scalable serverless api-calling microservice that runs on NodeJs but is _written in ClojureScript_ is just awesomeee! 😍
+
 ---
+
+Proudly scaffolded with the serverless "aws-clojurescript-gradle" template.
 
 # AWS Clojurescript Gradle Template
 
@@ -60,5 +85,3 @@ To include **NodeJS** dependencies, modify [build.gradle](./build.gradle) and ad
 ### Using the Repl in IntelliJ Cursive IDE
 
 This project contains a [script](./scripts/node_repl.clj) the must be initialized in order to use the **Repl** in **IntelliJ**.
-
-![](http://share.rowellbelen.com/5WvFH2+)
