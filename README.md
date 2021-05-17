@@ -43,6 +43,8 @@ _Note: you will need to have the aws cli configured in order to deploy._
 # Live Endpoints
 This project is hosted live! It's a public HTTPS api so no api keys are required, but each client is rate limited to only 50 requests per day.
 
+_Note: Sorry, I cancelled my AWS membership so these endpoints are no longer live..._ 😢
+
 ### endpoints:
   - GET - https://r2iol78q44.execute-api.us-east-1.amazonaws.com/dev/healthCheck
   - GET - https://r2iol78q44.execute-api.us-east-1.amazonaws.com/dev/now
